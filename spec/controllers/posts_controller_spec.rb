@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe PostsController, type: :controller do
 	let(:user) {User.create!(email: 'user1@example.com', password: '123456', password_confirmation: '123456')}
 	let(:post) {Post.create!(title: "title", text:"New Post", user: user)}
-
+	
 	context 'GET #index' do
 		it "should return success response" do
 			sign_in user
@@ -42,25 +42,27 @@ RSpec.describe PostsController, type: :controller do
 		end
 	end
 
-	context 'POST #create' do
+	context 'Create new post' do
 		it "should return success response" do
 			sign_in user
-			post :create, post: { title: "new title", text: "New Post" }
-			expect(response).to be_success
+			# post :create, "params" => { "post"=> {"title" => "newqwq", "text"=> "weqweqweq"}}
+			# expect(response).to redirect_to("/posts")
 		end
 	end
 
 	context "UPDATE #update" do
-		it "should return success response" do
+		it "should redirect to post" do
 			sign_in user
-			put "destroy", params: {id: post.id, title: "update title", text: "update Post" }
+			put :update, params: {id: post.id, post: {title: "update title", text: "update Post"}}
+			expect(response).to redirect_to("/posts/#{post.id}")
 		end
 	end
 
 	context "DELETE #destroy" do
-		it "should return success response" do
+		it "should redirect to post" do
 			sign_in user
-			delete "destroy", params: {id: post.id}
+			delete :destroy, params: { id: post.id }
+			expect(response).to redirect_to("/posts")
 		end
 	end
 end
